@@ -1,0 +1,60 @@
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+import { UserModel } from "../model/user.model"
+
+dotenv.config()
+
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!
+const ACCESS_TOKEN_EXPIRATION = "15m"
+const REFRESH_TOKEN_EXPIRATION = "7d"
+
+let refreshTokens: string[] = [] // Temporary in-memory storage
+
+// 🔐 Hash Password
+export const hashPassword = async (password: string): Promise<string> => {
+    const saltRounds = 10
+    return await bcrypt.hash(password, saltRounds)
+}
+
+// 🔐 Compare Passwords
+export const comparePassword = async (plain: string, hashed: string): Promise<boolean> => {
+    return await bcrypt.compare(plain, hashed)
+}
+
+// 🔑 Generate Access Token
+export const generateAccessToken = (user: any): string => {
+    return jwt.sign({ id: user._id, role: user.role }, ACCESS_TOKEN_SECRET, {
+        expiresIn: ACCESS_TOKEN_EXPIRATION,
+    })
+}
+
+// 🔁 Generate Refresh Token
+export const generateRefreshToken = (user: any): string => {
+    const token = jwt.sign({ id: user._id }, REFRESH_TOKEN_SECRET, {
+        expiresIn: REFRESH_TOKEN_EXPIRATION,
+    })
+    refreshTokens.push(token)
+    return token
+}
+
+// 🗑️ Revoke (remove) refresh token
+export const revokeRefreshToken = (token: string): void => {
+    refreshTokens = refreshTokens.filter(t => t !== token)
+}
+
+// ✅ Validate refresh token
+export const validateRefreshToken = (token: string): boolean => {
+    return refreshTokens.includes(token)
+}
+
+// 🧑 Get user by email
+export const getUserByEmail = async (email: string) => {
+    return await UserModel.findOne({ email })
+}
+
+// 👥 Get all users
+export const getAllUsersService = async () => {
+    return await UserModel.find().select("-password")
+}

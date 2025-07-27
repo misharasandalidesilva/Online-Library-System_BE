@@ -1,0 +1,18 @@
+import { Router } from "express";
+import {
+    addBook,
+    getAllBooks,
+    getBookById,
+    updateBook,
+    deleteBook,
+} from "../controllers/book.controller";
+import { authenticateToken } from "../middleware/auth.middleware";
+
+const bookrouter = Router();
+
+bookrouter.get("/", getAllBooks);
+bookrouter.post("/", authenticateToken, addBook);
+bookrouter.put("/:id", authenticateToken, updateBook);
+bookrouter.delete("/:id", authenticateToken, deleteBook);
+
+export default bookrouter;
