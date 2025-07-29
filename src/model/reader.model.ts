@@ -13,35 +13,29 @@ type Reader = {
 const readerSchema = new mongoose.Schema<Reader>({
     first_name: {
         type: String,
-        required: [true, "First name is required"],
         trim: true,
     },
 
     last_name: {
         type: String,
-        required: [true, "Last name is required"],
         trim: true,
     },
     email: {
         type: String,
-        required: [true, "Email is required"],
         unique: true,
         trim: true,
         lowercase: true,
     },
     age: {
         type: Number,
-        required: [true, "Age is required"],
         trim: true,
     },
     address:{
         type: String,
-        required: [true, "Address is required"],
         trim: true,
     },
     phone:{
         type: String,
-        required: [true, "Phone is required"],
         trim: true,
     },
     join_date: {

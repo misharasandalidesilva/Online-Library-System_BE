@@ -8,8 +8,8 @@ import {
 
 const readerRouter = Router();
 
-readerRouter.post("/", createReaderController);
-readerRouter.get("/", getAllReadersController);
+readerRouter.post("/add", createReaderController);
+readerRouter.get("/getAll", getAllReadersController);
 readerRouter.put("/:id", editReaderController);
 readerRouter.delete("/:id", deleteReaderController);
 
