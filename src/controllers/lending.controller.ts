@@ -10,6 +10,7 @@ import {
     updateLending,
     deleteLending,
 } from "../services/lending.service";
+import {LendingModel} from "../model/lending.model";
 
 // Create lending record
 export const landbook = async (req: Request, res: Response, next: NextFunction) => {
@@ -92,3 +93,31 @@ export const deleteRecord = async (req: Request, res: Response, next: NextFuncti
         next(err);
     }
 };
+
+export const getAllOverdueRecords = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const today = new Date();
+        const overdueRecords = await LendingModel.find({
+            dueDate: { $lt: today },
+            status: "borrowed"
+        });
+        res.status(200).json(overdueRecords);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const markAsReturn = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        const lending = await LendingModel.findById(id);
+        if (!lending) {
+            return res.status(404).json({ message: "Lending record not found" });
+        }
+        lending.status = "returned";
+        await lending.save();
+        res.status(200).json(lending);
+    } catch (err) {
+        next(err);
+    }
+}

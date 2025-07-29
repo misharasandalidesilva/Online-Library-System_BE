@@ -11,7 +11,7 @@ const app = express()
 
 // handle cors
 const corsOptions = {
-    origin: process.env.CLIENT_ORIGIN,
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5174',
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeader: ["Content-Type", "Authorization"],

@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 import {
     landbook,
@@ -7,16 +8,20 @@ import {
     updatereturnDate,
     updateRecord,
     deleteRecord,
+    getAllOverdueRecords,
+    markAsReturn
 } from "../controllers/lending.controller";
 
-const lendingRouter = Router();
+const landingRouter = Router();
 
-lendingRouter.post("/", landbook);
-lendingRouter.get("/", getAllRecords);
-lendingRouter.get("/reader/:readerId", getRecordByReaderId);
-lendingRouter.get("/book/:bookId", getRecordByBookId);
-lendingRouter.patch("/:id/return-date", updatereturnDate);
-lendingRouter.put("/:id", updateRecord);
-lendingRouter.delete("/:id", deleteRecord);
+landingRouter.post("/landbook", landbook);
+landingRouter.get("/getAllRecords", getAllRecords);
+landingRouter.get("/:id", getRecordByReaderId);
+landingRouter.get("/:id", getRecordByBookId);
+landingRouter.put("/:id", updatereturnDate);
+landingRouter.put("/:id", updateRecord);
+landingRouter.delete("/:id", deleteRecord);
+landingRouter.get("/getOverdueRecords", getAllOverdueRecords);
+landingRouter.put("/return/:id", markAsReturn);
 
-export default lendingRouter;
+export default landingRouter;
